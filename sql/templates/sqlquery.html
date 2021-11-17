@@ -66,6 +66,14 @@
                         </div>
                         <div class="col-md-3 column">
                             <div class="form-group">
+                                <select id="db_name_search" name="db_name_search"
+                                        class="form-control selectpicker show-tick bs-select-hidden"
+                                        data-live-search="true" data-live-search-placeholder="搜索数据库"
+                                        title="搜索数据库:"
+                                        data-placeholder="搜索数据库:" required>
+                                </select>
+                            </div>
+                            <div class="form-group">
                                 <select id="instance_name" name="instance_name"
                                         class="selectpicker show-tick form-control bs-select-hidden"
                                         data-live-search="true" data-live-search-placeholder="搜索您所在组的实例"
@@ -982,6 +990,59 @@
             }
         }
 
+        // 数据库搜索变更获取实例
+        $("#db_name_search").change(function () {
+            if (sessionStorage.getItem('re_query')) {
+                get_instance_use_db(false)
+            } else {
+                get_instance_use_db(true)
+            }
+        });
+
+        function get_instance_use_db(async) {
+            optgroup_control(true);
+            $("#db_name").empty();
+            $('#db_name').selectpicker('render');
+            $('#db_name').selectpicker('refresh');
+            sessionStorage.setItem('sql_query_instance_name', $("#instance_name").val());
+            //获取db_name
+            $.ajax({
+                type: "get",
+                url: "/instance/user_all_databases/",
+                dataType: "json",
+                async: async,
+                data: {
+                    db_name_search: $("#db_name_search").val(),
+                },
+                complete: function () {
+                    $("#instance_name").selectpicker('val', instance_name);
+                    if ($("#instance_name").val()) {
+                        $("#instance_name").selectpicker().trigger("change");
+                    }
+                },
+                success: function (data) {
+                    if (data.status === 0) {
+                        var result = data.data;
+                        var dbs = [];
+                        for (var i = 0; i < result.length; i++) {
+                            var name = "<option value=\"" + result[i] + "\">" + result[i] + "</option>";
+                            $("instance_name").append(name);
+                        }
+                        $('#db_name').selectpicker('render');
+                        $('#db_name').selectpicker('refresh');
+                        //自动补全提示
+                        setCompleteData(dbs)
+                    } else {
+                        alert(data.msg);
+                    }
+                },
+
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+            });
+        }
+
         //实例变更获取数据库
         $("#instance_name").change(function () {
             if (sessionStorage.getItem('re_query')) {
@@ -1200,11 +1261,52 @@
             //默认获取查询历史
             get_querylog();
 
-            //获取用户实例列表
-            $(function () {
+
+            //获取用户数据库列表
+            get_user_dbs();
+
+            function get_user_dbs() {
                 $.ajax({
                     type: "get",
-                    url: "/group/user_all_instances/",
+                    url: "/instance/user_all_databases/",
+                    dataType: "json",
+                    data: {
+                        tag_codes: ['can_read']
+                    },
+                    complete: function () {
+                        //填充数据库名
+                        $("#db_name_search").selectpicker('val', sessionStorage.getItem('sql_query_db_name_search'));
+                        if ($("#db_name_search").val()) {
+                            $("#db_name_search").selectpicker().trigger("change");
+                        }
+                    },
+                    success: function (data) {
+                        if (data.status === 0) {
+                            var result = data['data'];
+                            for (let i = 0; i < result.length; i++) {
+                                let db_name = "<option value=\"" + result[i]['db_name'] + "\">" + result[i]['db_name'] + "</option>";
+                                console.log(db_name);
+                                $("#db_name_search").append(db_name);
+                            }
+                            $('#db_name_search').selectpicker('render');
+                            $('#db_name_search').selectpicker('refresh');
+                        } else {
+                            alert(data.msg);
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        alert(errorThrown);
+                    }
+                });
+            }
+
+            //获取用户实例列表
+            get_user_instance();
+
+            function get_user_instance() {
+                $.ajax({
+                    type: "get",
+                    url: "/group/user_all_instances_priv/",
                     dataType: "json",
                     data: {
                         tag_codes: ['can_read']
@@ -1243,6 +1345,7 @@
                                     $("#optgroup-phoenix").append(instance);
                                 }
                             }
+                            //console.log($("#instance_name").val());
                             $('#instance_name').selectpicker('render');
                             $('#instance_name').selectpicker('refresh');
                             $("#db_name").empty();
@@ -1256,7 +1359,7 @@
                         alert(errorThrown);
                     }
                 });
-            });
+            }
         });
 
         function show(o) {

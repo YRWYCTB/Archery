@@ -10,12 +10,12 @@ from django.conf import settings
 from django.contrib.auth.decorators import permission_required
 from django.http import HttpResponse
 from django.views.decorators.cache import cache_page
-
+import datetime
 from common.config import SysConfig
 from common.utils.extend_json_encoder import ExtendJSONEncoder
 from sql.engines import get_engine
 from sql.plugins.schemasync import SchemaSync
-from .models import Instance, ParamTemplate, ParamHistory
+from .models import Instance, ParamTemplate, ParamHistory, InstanceDatabase, QueryPrivileges
 
 
 @permission_required('sql.menu_instance_list', raise_exception=True)
@@ -323,4 +323,28 @@ def describe(request):
     if result['data']['error']:
         result['status'] = 1
         result['msg'] = result['data']['error']
+    return HttpResponse(json.dumps(result), content_type='application/json')
+
+def user_all_databases(request):
+    """
+    获取用户实例列表（通过资源组间接关联）
+    :param user:
+    :param type: 实例类型 all：全部，master主库，salve从库
+    :param db_type: 数据库类型, ['mysql','mssql']
+    :param tag_codes: 标签code列表, ['can_write', 'can_read']
+    :return:
+    """
+    user = request.user
+    # 拥有所有数据库权限的用户
+    if user.has_perm('sql.query_all_instances'):
+        user_dbs = InstanceDatabase.objects.all()
+    else:
+        # 再获取该资源组中的实例
+        user_dbs = QueryPrivileges.objects.filter(user_name=user.username, valid_date__gte=datetime.datetime.now(),
+                                                  is_deleted=0,priv_type=1)
+    # 过滤type
+
+    dbs = user_dbs.distinct().values('db_name')
+    rows = [row for row in dbs]
+    result = {'status': 0, 'msg': 'ok', "data": rows}
     return HttpResponse(json.dumps(result), content_type='application/json')

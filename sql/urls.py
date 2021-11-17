@@ -85,8 +85,10 @@ urlpatterns = [
     path('group/auditors/', resource_group.auditors),
     path('group/changeauditors/', resource_group.changeauditors),
     path('group/user_all_instances/', resource_group.user_all_instances),
+    path('group/user_all_instances_priv/', resource_group.user_all_instances_priv),
 
     path('instance/list/', instance.lists),
+    path('instance/user_all_databases/', instance.user_all_databases),
 
     path('instance/user/list', instance_account.users),
     path('instance/user/create/', instance_account.create),
