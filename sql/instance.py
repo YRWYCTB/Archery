@@ -16,7 +16,7 @@ from common.utils.extend_json_encoder import ExtendJSONEncoder
 from sql.engines import get_engine
 from sql.plugins.schemasync import SchemaSync
 from .models import Instance, ParamTemplate, ParamHistory, InstanceDatabase, QueryPrivileges
-
+from sql.utils.resource_group import user_groups, user_instances
 
 @permission_required('sql.menu_instance_list', raise_exception=True)
 def lists(request):
@@ -327,19 +327,22 @@ def describe(request):
 
 def user_all_databases(request):
     """
-    获取用户实例列表（通过资源组间接关联）
+    获取用户数据库列表
     :param user:
-    :param type: 实例类型 all：全部，master主库，salve从库
-    :param db_type: 数据库类型, ['mysql','mssql']
-    :param tag_codes: 标签code列表, ['can_write', 'can_read']
     :return:
     """
     user = request.user
     # 拥有所有数据库权限的用户
-    if user.has_perm('sql.query_all_instances'):
+    if user.is_superuser:
         user_dbs = InstanceDatabase.objects.all()
+    elif user.has_perm('sql.query_mgtpriv'):
+        # 先获取用户所在资源组列表
+        group_list = user_groups(user)
+        group_ids = [group.group_id for group in group_list]
+        user_dbs = QueryPrivileges.objects.filter(is_deleted=0, valid_date__gte=datetime.datetime.now())
+        user_dbs = user_dbs.filter(instance__queryprivilegesapply__group_id__in=group_ids)
     else:
-        # 再获取该资源组中的实例
+        # 普通用户通过权限表进行查询
         user_dbs = QueryPrivileges.objects.filter(user_name=user.username, valid_date__gte=datetime.datetime.now(),
                                                   is_deleted=0,priv_type=1)
     # 过滤type

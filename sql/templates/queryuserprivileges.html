@@ -14,10 +14,10 @@
                 <option value="all" selected="selected">全部</option>
                 {% if user.is_superuser %}
                     {% for user in user_list %}
-                        <option value="{{ user.user_display }}">{{ user.display }}</option>
+                        <option value="{{ user.user_display }}">{{ user.user_display }}</option>
                     {% endfor %}
                 {% else %}
-                    <option value="{{ user.user_display }}">{{ user.display }}</option>
+                    <option value="{{ user.display }}">{{ user.display }}</option>
                 {% endif %}
             </select>
         </div>

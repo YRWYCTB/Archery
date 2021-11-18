@@ -22,6 +22,7 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 15728640
 
 # Application definition
 INSTALLED_APPS = (
+    'simpleui',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,6 +47,9 @@ MIDDLEWARE = (
     'common.middleware.check_login_middleware.CheckLoginMiddleware',
     'common.middleware.exception_logging_middleware.ExceptionLoggingMiddleware',
 )
+
+# 解决 in a frame because it set 'X-Frame-Options' to 'DENY'.
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 ROOT_URLCONF = 'archery.urls'
 
