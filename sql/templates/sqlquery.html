@@ -1285,7 +1285,6 @@
                             var result = data['data'];
                             for (let i = 0; i < result.length; i++) {
                                 let db_name = "<option value=\"" + result[i]['db_name'] + "\">" + result[i]['db_name'] + "</option>";
-                                console.log(db_name);
                                 $("#db_name_search").append(db_name);
                             }
                             $('#db_name_search').selectpicker('render');
@@ -1345,7 +1344,6 @@
                                     $("#optgroup-phoenix").append(instance);
                                 }
                             }
-                            //console.log($("#instance_name").val());
                             $('#instance_name').selectpicker('render');
                             $('#instance_name').selectpicker('refresh');
                             $("#db_name").empty();
