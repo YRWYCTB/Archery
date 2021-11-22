@@ -3,14 +3,14 @@ DIR="$( cd "$( dirname "$0"  )" && pwd  )"
 cd ${DIR}
 
 #配置Archery数据库的连接地址
-archery_db_host="127.0.0.1"
+archery_db_host="10.10.3.137"
 archery_db_port=3306
-archery_db_user="root"
+archery_db_user="zhangchong"
 archery_db_password="123456"
 archery_db_database="archery"
 
 #被分析实例的慢日志位置，建议定期清理日志文件，否则会影响分析效率
-slowquery_file="/home/mysql/log_slow.log"
+slowquery_file="/data/mysql/3306/logs/log_slow.log"
 
 #pt-query-digest可执行文件路径
 pt_query_digest="/usr/bin/pt-query-digest"
