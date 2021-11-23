@@ -7,7 +7,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'hfusaf2m4ot#7)fka453ff140cbe10c3bf5bc4a8cb76efbe'
+SECRET_KEY = 'hfusaf2m4ot#7)fkw#div053ff140cbe10c3bf5bc4a8cb76ef'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -125,7 +125,7 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # 关闭浏览器，则COOKIE失效
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'archery',
+        'NAME': 'rc_archery',
         'USER': 'archery',
         'PASSWORD': 'archery',
         'HOST': '10.10.3.137',
