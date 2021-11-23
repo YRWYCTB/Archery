@@ -65,7 +65,7 @@
                             <pre id="sql_content_editor" class="ace_editor " style="min-height:350px"></pre>
                         </div>
                         <div class="col-md-3 column">
-                            <div class="form-group">
+                            <div class="form-group" hidden>
                                 <select id="db_name_search" name="db_name_search"
                                         class="form-control selectpicker show-tick bs-select-hidden"
                                         data-live-search="true" data-live-search-placeholder="搜索数据库"
@@ -1305,7 +1305,8 @@
             function get_user_instance() {
                 $.ajax({
                     type: "get",
-                    url: "/group/user_all_instances_priv/",
+                    //url: "/group/user_all_instances_priv/",
+                    url: "/group/user_all_instances",
                     dataType: "json",
                     data: {
                         tag_codes: ['can_read']
