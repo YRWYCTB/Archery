@@ -7,7 +7,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'hfusaf2m4ot#7)fkw#div053ff140cbe10c3bf5bc4a8cb76ef'
+SECRET_KEY = 'hfusaf2m4ot#7)fkw#div0xxxx'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -127,7 +127,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'rc_archery',
         'USER': 'archery',
-        'PASSWORD': 'archery',
+        'PASSWORD': 'xxxx',
         'HOST': '10.10.3.137',
         'PORT': '3306',
         'OPTIONS': {
@@ -187,11 +187,11 @@ if ENABLE_LDAP:
         'django.contrib.auth.backends.ModelBackend',  # django系统中手动创建的用户也可使用，优先级靠后。注意这2行的顺序
     )
 
-    AUTH_LDAP_SERVER_URI = "ldap://10.10.0.183:389"
+    AUTH_LDAP_SERVER_URI = "ldap://10.10.0.xxxx"
     #AUTH_LDAP_USER_DN_TEMPLATE = "cn=%(user)s,ou=xxx,dc=xxx,dc=xxx"
     # ldap认证的另一种方式,使用时注释AUTH_LDAP_USER_DN_TEMPLATE
     AUTH_LDAP_BIND_DN = "cn=Manager,dc=playrc,dc=com"
-    AUTH_LDAP_BIND_PASSWORD = "Bgt5Bgt5Fr4"
+    AUTH_LDAP_BIND_PASSWORD = "xxxx"
     AUTH_LDAP_USER_SEARCH = LDAPSearch('ou=People,dc=playrc,dc=com',ldap.SCOPE_SUBTREE, '(cn=%(user)s)',)
     AUTH_LDAP_ALWAYS_UPDATE_USER = True  # 每次登录从ldap同步用户信息
     AUTH_LDAP_USER_ATTR_MAP = {  # key为archery.sql_users字段名，value为ldap中字段名，用户同步信息
