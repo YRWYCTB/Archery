@@ -15,7 +15,6 @@
 
 [文档](https://archerydms.com/) | [FAQ](https://github.com/hhyo/archery/wiki/FAQ) | [Releases](https://github.com/hhyo/archery/releases/)
 
-![](https://images.gitee.com/uploads/images/2019/1110/202317_32bd4a1c_1038040.png)
 
 </div>
 
